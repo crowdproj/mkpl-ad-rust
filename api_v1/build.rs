@@ -6,6 +6,7 @@ use tokio::fs::File;
 use tokio::io::copy;
 // use std::process::{Command, Stdio};
 use std::process::Command;
+use std::path::Path;
 
 struct BuildCtx {
     oapi_dir: OsString,
@@ -19,9 +20,9 @@ struct BuildCtx {
 async fn main() {
     println!("cargo:rerun-if-changed=build.rs");
 
-    // std::env::vars().for_each(
-    //     |f| println!("cargo:warning=ENV: {}={}", f.0, f.1)
-    // );
+    std::env::vars().for_each(
+        |f| println!("cargo:warning=ENV: {}={}", f.0, f.1)
+    );
 
     let out_dir = std::env::var_os("OUT_DIR").unwrap();
     let bas_dir = std::env::var_os("CARGO_MANIFEST_DIR").unwrap();
@@ -34,6 +35,10 @@ async fn main() {
     };
 
     download_jar(&ctx).await;
+    match Path::new(&ctx.spec_path).is_file() {
+        true => println!("File spec does exist {}", ctx.spec_path.to_string_lossy()),
+        false => println!("cargo:error=File spec does NOT exist {}", ctx.spec_path.to_string_lossy()),
+    }
     process_spec(&ctx).await;
 
     let path = std::path::Path::new(&out_dir).join("test.rs");
@@ -51,7 +56,7 @@ async fn download_jar(ctx: &BuildCtx) {
 async fn process_spec(ctx: &BuildCtx) {
     fs::create_dir_all(&ctx.oapi_dir).unwrap();
     let log_path = std::path::Path::new(&ctx.oapi_dir).join("log.log");
-    let log = std::fs::File::create(log_path).expect("failed to open log");
+    let log = std::fs::File::create(log_path).expect("cargo:error=failed to open log");
 
     Command::new("java")
         .arg("-jar")
@@ -72,14 +77,5 @@ async fn process_spec(ctx: &BuildCtx) {
         .stdout(log.try_clone().unwrap())
         .stderr(log)
         .output()
-        .map(|output| {
-            println!("Code generation successful!");
-            output
-        })
-        .or_else(|e| {
-            eprintln!("Failed to generate code from specs: {}", e);
-            // exit(-1);
-            Err(e)
-        })
-        .expect("Failed to generate code from specs");
+        .expect("cargo:error=Failed to generate code from specs");
 }

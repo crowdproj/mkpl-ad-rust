@@ -27,7 +27,7 @@ clap = { version = "4.4", features = ["derive"] }
 env_logger = "0.11.6"
 async-trait = "0.1.24"
 futures = "0.3"
-hyper = { version = "0.14", features = ["full"], optional = true }
+hyper = {workspace = true, optional = true}
 swagger = { version = "6.1", features = ["serdejson", "server", "tls", "tcp"] }
 log = "0.4.0"
 url = { version = "2.1", optional = true }
@@ -43,7 +43,7 @@ hyper-openssl = { version = "0.10.2" }
 tokio-openssl = { version = "0.6" }
 # openssl = {version = "0.10", features = ["vendored"]}
 
-serde = { version = "1.0", features = ["derive"] }
-serde_derive = "1.0"
-serde_json = { workspace = true }
+serde.workspace = true
+serde_json.workspace = true
+serde_derive.workspace = true
 serde_ignored = { version = "0.1.1", optional = true }
