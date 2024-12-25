@@ -1,0 +1,8 @@
+services:
+  app:
+    image: app-hyper:0.0.1
+    build:
+      dockerfile: ./Dockerfile.deb
+    ports:
+      - "8080:8080"
+    

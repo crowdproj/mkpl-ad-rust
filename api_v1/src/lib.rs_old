@@ -1,0 +1,5 @@
+mod test {
+    // include!(concat!(env!("OUT_DIR"), "/generates/src/lib.rs"));
+    // include!(concat!(env!("OUT_DIR"), "/generates/src/server/mod.rs"));
+    include!(concat!(env!("OUT_DIR"), "/generates/src/lib.rs"));
+}

@@ -1,0 +1,19 @@
+FROM rust:bookworm as builder
+WORKDIR /app-build
+COPY . .
+
+# libc-dev
+RUN apt-get update && apt install -y libtls-dev
+#RUN apk add --no-cache pkgconf openssl-dev musl-dev cmake make gcc g++ perl clang16 curl strace
+#ENV OPENSSL_DIR=/usr
+
+RUN cargo install --path app-hyper
+
+CMD ["myapp"]
+
+FROM debian:bookworm-slim
+RUN apt-get update && apt install -y libssl3 libtls26 && apt clean && rm -r /var/lib/apt/lists
+COPY --from=builder /usr/local/cargo/bin/app-hyper /
+
+EXPOSE 8080
+ENTRYPOINT ["/app-hyper"]
