@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "common",
     "api_v1",
     "app-hyper",
 ]
