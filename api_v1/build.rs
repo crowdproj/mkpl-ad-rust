@@ -20,9 +20,9 @@ struct BuildCtx {
 async fn main() {
     println!("cargo:rerun-if-changed=build.rs");
 
-    std::env::vars().for_each(
-        |f| println!("cargo:warning=ENV: {}={}", f.0, f.1)
-    );
+    // std::env::vars().for_each(
+    //     |f| println!("cargo:warning=ENV: {}={}", f.0, f.1)
+    // );
 
     let out_dir = std::env::var_os("OUT_DIR").unwrap();
     let bas_dir = std::env::var_os("CARGO_MANIFEST_DIR").unwrap();

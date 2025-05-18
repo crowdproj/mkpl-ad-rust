@@ -2,7 +2,10 @@
 resolver = "2"
 members = [
     "common",
+    "biz-common",
+    "stubs",
     "api_v1",
+    "api_v1_map",
     "app-hyper",
 ]
 
