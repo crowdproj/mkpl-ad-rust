@@ -3,12 +3,15 @@ use api_v1::models::AdCreateRequest;
 use crate::mappers_priv::mkpl_ad_request_id::RequestIdConverter;
 use crate::mappers_pub::create::object_mapper::AdCreateObjectMapper;
 use biz_common::{models::mkpl_ad_command::MkplAdCommand, MkplAdCtx};
-use stubs::StubsMkplAd;
 
 #[derive(Debug)]
 pub struct AdCreateRequestMapper<'a>(&'a mut MkplAdCtx);
 
 impl<'a> AdCreateRequestMapper<'a> {
+    pub fn new(ctx: &'a mut MkplAdCtx) -> Self {
+        AdCreateRequestMapper(ctx)
+    }
+
     pub fn from_api(&mut self, api_obj: &AdCreateRequest) {
         self.0.request_id = RequestIdConverter::from_api(&api_obj.request_id);
         self.0.ad_request = AdCreateObjectMapper::from_api(&api_obj.ad);
@@ -27,6 +30,8 @@ impl<'a> AdCreateRequestMapper<'a> {
 
 #[cfg(test)]
 mod tests {
+    extern crate stubs;
+    use self::stubs::StubsMkplAd;
     use super::*;
 
     #[test]

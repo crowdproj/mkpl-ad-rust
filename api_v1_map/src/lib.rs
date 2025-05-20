@@ -5,6 +5,8 @@ pub mod mappers_priv;
 pub mod mappers_pub;
 
 // Реэкспорт основных типов для удобства
+
+pub use mappers_pub::create::request_mapper::AdCreateRequestMapper;
 // pub use models::{
 //     ad_create_object::AdCreateObjectWrapper, ad_read_object::AdReadObjectWrapper,
 //     ad_search_filter::AdSearchFilterWrapper, ad_update_object::AdUpdateObjectWrapper,
