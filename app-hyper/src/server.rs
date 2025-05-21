@@ -21,7 +21,7 @@ use tokio::net::TcpListener;
 use openssl::ssl::{Ssl, SslAcceptor, SslAcceptorBuilder, SslFiletype, SslMethod};
 
 use api_v1::models;
-use api_v1_map::AdCreateRequestMapper;
+use api_v1_map::AdCreateRequestMapperV1;
 use biz_common::{models::mkpl_ad_command::MkplAdCommand, MkplAdCtx};
 
 /// Builds an SSL implementation for Simple HTTPS from some hard-coded file names
@@ -93,7 +93,7 @@ where
             context.get().0.clone()
         );
         let mut ctx: MkplAdCtx = MkplAdCtx::new();
-        let mut ctx_mapper = AdCreateRequestMapper::new(&mut ctx);
+        let mut ctx_mapper = AdCreateRequestMapperV1::new(&mut ctx);
         ctx_mapper.from_api(&ad_create_request);
 
         // Err(ApiError("Api-Error: Operation is NOT implemented".into()))

@@ -1,7 +1,7 @@
 use api_v1::models::AdCreateRequest;
 
-use crate::mappers_priv::mkpl_ad_request_id::RequestIdConverter;
-use crate::mappers_pub::create::object_mapper::AdCreateObjectMapper;
+use crate::mappers::base::RequestIdConverter;
+use crate::mappers::create::object_mapper::AdCreateObjectMapper;
 use biz_common::{models::mkpl_ad_command::MkplAdCommand, MkplAdCtx};
 
 #[derive(Debug)]

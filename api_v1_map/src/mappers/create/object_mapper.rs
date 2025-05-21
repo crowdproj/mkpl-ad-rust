@@ -2,7 +2,7 @@ use api_v1::models::{AdCreateObject, AdVisibility, DealSide};
 use common::mkpl_ad::*;
 use common::{mkpl_ad_id::MkplAdId, mkpl_ad_lock::MkplAdLock, mkpl_ad_product_id::MkplAdProductId};
 
-use crate::mappers_priv::{
+use crate::mappers::base::{
     AdTypeConverter, ProductIdConverter, StringFieldConverter, VisibilityConverter,
 };
 
