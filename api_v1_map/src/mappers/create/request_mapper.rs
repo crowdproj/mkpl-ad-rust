@@ -1,8 +1,8 @@
 use api_v1::models::AdCreateRequest;
 
-use crate::mappers::base::RequestIdConverter;
+use crate::mappers::base::{RequestIdConverter, DISCRIMINATOR_CREATE};
 use crate::mappers::create::object_mapper::AdCreateObjectMapper;
-use biz_common::{models::mkpl_ad_command::MkplAdCommand, MkplAdCtx};
+use biz_common::{models::MkplAdCommand, MkplAdCtx};
 
 #[derive(Debug)]
 pub struct AdCreateRequestMapper<'a>(&'a mut MkplAdCtx);
@@ -21,7 +21,7 @@ impl<'a> AdCreateRequestMapper<'a> {
     pub fn to_api(&self) -> AdCreateRequest {
         AdCreateRequest {
             request_id: RequestIdConverter::to_api(&self.0.request_id),
-            request_type: Some("create".to_string()),
+            request_type: Some(DISCRIMINATOR_CREATE.to_string()),
             ad: AdCreateObjectMapper::to_api(&self.0.ad_request),
             debug: None,
         }
@@ -30,9 +30,8 @@ impl<'a> AdCreateRequestMapper<'a> {
 
 #[cfg(test)]
 mod tests {
-    extern crate stubs;
-    use self::stubs::StubsMkplAd;
     use super::*;
+    use stubs::StubsMkplAd;
 
     #[test]
     fn test_full_conversion_cycle() {

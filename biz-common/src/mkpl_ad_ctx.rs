@@ -9,6 +9,8 @@ pub struct MkplAdCtx {
     pub state: BizStatus,
     pub request_id: MkplAdRequestId,
     pub ad_request: MkplAd,
+
+    pub ad_response: MkplAd,
 }
 
 impl MkplAdCtx {
@@ -19,10 +21,12 @@ impl MkplAdCtx {
             request_id: MkplAdRequestId::none(),
 
             ad_request: MkplAd::new(),
+
+            ad_response: MkplAd::new(),
         }
     }
 }
 
-trait ToCtx<T> {
-    fn to_ctx(&self, dat: &T);
-}
+// trait ToCtx<T> {
+//     fn to_ctx(&self, dat: &T);
+// }

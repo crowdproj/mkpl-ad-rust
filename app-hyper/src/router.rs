@@ -8,8 +8,8 @@ use futures::future::BoxFuture;
 use futures_util::future;
 use hyper::service::Service;
 use hyper::{Body, Request, Response, Server};
-use swagger::{XSpanIdString, Has, EmptyContext};
 use swagger::auth::MakeAllowAllAuthenticator;
+use swagger::{EmptyContext, Has, XSpanIdString};
 
 // use crate::server::Server;
 
@@ -44,7 +44,8 @@ const ROOT: &str = "/";
 // }
 
 pub struct RouterService {
-    pub v1_service: api_v1::context::MakeAddContext<MakeAllowAllAuthenticator<MakeService<Server<_>, _>, _>, _>,
+    pub v1_service:
+        api_v1::context::MakeAddContext<MakeAllowAllAuthenticator<MakeService<Server<_>, _>, _>, _>,
 }
 
 impl<C> RouterService<C> {
@@ -70,12 +71,17 @@ where
         self.api_impl.poll_ready(cx)
     }
 
-    fn call(&mut self, req: (Request<Body>, C)) -> Self::Future { async fn run<T, C>(mut api_impl: T, req: (Request<Body>, C)) -> Result<Response<Body>, dyn Error> where
-        T: Clone + Send + 'static,
-    {
-        let (request, context) = req;
-        let (parts, body) = request.into_parts();
-        let (method, uri, headers) = (parts.method, parts.uri, parts.headers);
+    fn call(&mut self, req: (Request<Body>, C)) -> Self::Future {
+        async fn run<T, C>(
+            mut api_impl: T,
+            req: (Request<Body>, C),
+        ) -> Result<Response<Body>, dyn Error>
+        where
+            T: Clone + Send + 'static,
+        {
+            let (request, context) = req;
+            let (parts, body) = request.into_parts();
+            let (method, uri, headers) = (parts.method, parts.uri, parts.headers);
 
             future::ok(self.v1_service)
         }

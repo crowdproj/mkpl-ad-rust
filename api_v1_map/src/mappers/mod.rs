@@ -1,5 +1,6 @@
 mod base;
 pub(crate) mod create;
+pub(crate) mod read;
 
 // pub use ad_create_object::AdCreateObjectWrapper;
 // pub use ad_read_object::AdReadObjectWrapper;
