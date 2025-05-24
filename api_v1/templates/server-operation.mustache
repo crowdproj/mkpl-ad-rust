@@ -1,42 +1,5 @@
             // {{{operationId}}} - {{{httpMethod}}} {{{path}}}
             hyper::Method::{{vendorExtensions.x-http-method}} if path.matched(paths::ID_{{vendorExtensions.x-path-id}}) => {
-{{#hasAuthMethods}}
-                {
-                    let authorization = match *(&context as &dyn Has<Option<Authorization>>).get() {
-                        Some(ref authorization) => authorization,
-                        None => return Ok(Response::builder()
-                                                .status(StatusCode::FORBIDDEN)
-                                                .body(Full::new(Bytes::from("Unauthenticated")))
-                                                .expect("Unable to create Authentication Forbidden response")),
-                    };
-                    {{#authMethods}}
-                    {{#isOAuth}}
-
-                    // Authorization
-                    if let Scopes::Some(ref scopes) = authorization.scopes {
-                        let required_scopes: std::collections::BTreeSet<String> = vec![
-                            {{#scopes}}
-                            "{{{scope}}}".to_string(), // {{{description}}}
-                            {{/scopes}}
-                        ].into_iter().collect();
-
-                        if !required_scopes.is_subset(scopes) {
-                            let missing_scopes = required_scopes.difference(scopes);
-                            return Ok(Response::builder()
-                                .status(StatusCode::FORBIDDEN)
-                                .body(Full::new(Bytes::from(missing_scopes.fold(
-                                    "Insufficient authorization, missing scopes".to_string(),
-                                    |s, scope| format!("{} {}", s, scope))
-                                )))
-                                .expect("Unable to create Authentication Insufficient response")
-                            );
-                        }
-                    }
-                    {{/isOAuth}}
-                    {{/authMethods}}
-                }
-
-{{/hasAuthMethods}}
 {{#vendorExtensions}}
   {{#x-has-path-params}}
                 // Path parameters

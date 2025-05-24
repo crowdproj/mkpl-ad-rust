@@ -8,7 +8,7 @@ fn method_not_allowed() -> Result<Response<Full<Bytes>>, crate::ServiceError> {
 
 pub struct Service<T, C> where
     T: Api<C> + Clone + Send + 'static,
-    C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+    C: Send + Sync + 'static
 {
     api_impl: T,
 {{#apiUsesMultipart}}
@@ -19,7 +19,7 @@ pub struct Service<T, C> where
 
 impl<T, C> Service<T, C> where
     T: Api<C> + Clone + Send + 'static,
-    C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+    C: Send + Sync + 'static
 {
     pub fn new(api_impl: T) -> Self {
         Service {
@@ -46,7 +46,7 @@ impl<T, C> Service<T, C> where
 
 impl<T, C> Clone for Service<T, C> where
     T: Api<C> + Clone + Send + 'static,
-    C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+    C: Send + Sync + 'static
 {
     fn clone(&self) -> Self {
         Service {
@@ -61,7 +61,7 @@ impl<T, C> Clone for Service<T, C> where
 
 impl<T, C> hyper::service::Service<(Request<Incoming>, C)> for Service<T, C> where
     T: Api<C> + Clone + Send + Sync + 'static,
-    C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+    C: Send + Sync + 'static
 {
     type Response = Response<Full<Bytes>>;
     type Error = crate::ServiceError;
@@ -76,7 +76,7 @@ impl<T, C> hyper::service::Service<(Request<Incoming>, C)> for Service<T, C> whe
 {{/apiUsesMultipartFormData}}
         ) -> Result<Response<Full<Bytes>>, crate::ServiceError> where
             T: Api<C> + Clone + Send + 'static,
-            C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+            C: Send + Sync + 'static
         {
             let (request, context) = req;
             let (parts, body) = request.into_parts();

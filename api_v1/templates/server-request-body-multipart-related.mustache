@@ -1,8 +1,25 @@
                                 // Get multipart chunks.
 
                                 // Create headers from top-level content type header.
-                                /*
-                                let multipart_headers = match swagger::multipart::related::create_multipart_headers(headers.get(CONTENT_TYPE)) {
+                                let multipart_headers = match headers.get(CONTENT_TYPE) {
+                                    Some(header_value) => {
+                                        let content_type = header_value.to_str().map_err(|_| 
+                                            format!("Unable to read content-type header for {}", operation_id)
+                                        )?;
+                                        
+                                        let boundary = content_type
+                                            .split("boundary=")
+                                            .nth(1)
+                                            .and_then(|s| s.split(|c| c == ';' || c == '"').next())
+                                            .ok_or_else(|| 
+                                                format!("Missing boundary in Content-Type header for {}", operation_id)
+                                            )?;
+
+                                        Ok(("multipart/related", boundary.trim()))
+                                    }
+                                    None => Err(format!("Content-Type header is required for {}", operation_id)),
+                                };
+                                let multipart_headers = match multipart_headers {
                                     Ok(headers) => headers,
                                     Err(e) => {
                                         return Ok(Response::builder()
@@ -11,7 +28,6 @@
                                                 .expect("Unable to create Bad Request response due to unable to read content-type header for {{operationId}}"));
                                     }
                                 };
-                                */
 
                                 // &*body expresses the body as a byteslice, &mut provides a
                                 // mutable reference to that byteslice.

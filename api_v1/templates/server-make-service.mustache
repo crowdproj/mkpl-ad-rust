@@ -1,7 +1,7 @@
 
 pub struct MakeService<T, C> where
     T: Api<C> + Clone + Send + 'static,
-    C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+    C: Send + Sync + 'static
 {
     api_impl: T,
 {{#apiUsesMultipartFormData}}
@@ -12,7 +12,7 @@ pub struct MakeService<T, C> where
 
 impl<T, C> MakeService<T, C> where
     T: Api<C> + Clone + Send + 'static,
-    C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+    C: Send + Sync + 'static
 {
     pub fn new(api_impl: T) -> Self {
         MakeService {
@@ -39,7 +39,7 @@ impl<T, C> MakeService<T, C> where
 
 impl<T, C, Target> hyper::service::Service<Target> for MakeService<T, C> where
     T: Api<C> + Clone + Send + 'static,
-    C: Has<XSpanIdString> {{#hasAuthMethods}}+ Has<Option<Authorization>>{{/hasAuthMethods}} + Send + Sync + 'static
+    C: Send + Sync + 'static
 {
     type Response = Service<T, C>;
     type Error = crate::ServiceError;

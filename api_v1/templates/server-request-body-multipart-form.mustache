@@ -1,13 +1,16 @@
-                                /*
-                                let boundary = match swagger::multipart::form::boundary(&headers) {
-                                    Some(boundary) => boundary.to_string(),
+                                
+                                let boundary = match headers.get(hyper::header::CONTENT_TYPE)
+                                    .and_then(|v| v.to_str().ok())
+                                    .and_then(|ct| content_type::ContentType::parse(ct).ok())
+                                    .and_then(|ct| ct.get_param("boundary"))
+                                {
+                                    Some(boundary) => boundary.as_str().to_string(),
                                     None => return Ok(Response::builder()
-                                                .status(StatusCode::BAD_REQUEST)
-                                                .body(Full::new(Bytes::from("Couldn't find valid multipart body".to_string())))
-                                                .expect("Unable to create Bad Request response for incorrect boundary")),
-                                }; 
-                                */
-
+                                        .status(StatusCode::BAD_REQUEST)
+                                        .body(Full::new(Bytes::from("Missing or invalid Content-Type header with boundary")))
+                                        .expect("Failed to build BAD_REQUEST response")),
+                                };
+                                
                                 use std::io::Read;
 
                                 // Read Form Parameters from body

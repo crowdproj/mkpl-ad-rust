@@ -2,6 +2,8 @@ use bytes::Bytes;
 use http_body_util::{BodyExt, Full};
 use hyper::body::Incoming;
 
+use api_common::*;
+
 use futures::{future, future::BoxFuture, Stream, stream, future::FutureExt, stream::TryStreamExt};
 use hyper::{Request, Response, StatusCode, HeaderMap};
 use hyper::header::{HeaderName, HeaderValue, CONTENT_TYPE};
@@ -12,9 +14,6 @@ use std::error::Error;
 use std::future::Future;
 use std::marker::PhantomData;
 use std::task::{Context, Poll};
-// use swagger::{ApiError, Has, RequestParser, XSpanIdString};
-// pub use swagger::auth::Authorization;
-// use swagger::auth::Scopes;
 use url::form_urlencoded;
 {{#apiUsesMultipartRelated}}
 use hyper_0_10::header::{Headers, ContentType};
@@ -27,7 +26,7 @@ use multipart::server::save::{PartialReason, SaveResult};
 {{/apiUsesMultipartFormData}}
 
 #[allow(unused_imports)]
-use crate::{models, header, AuthenticationApi};
+use crate::{models, header};
 
 pub use crate::context;
 

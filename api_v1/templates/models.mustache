@@ -3,7 +3,7 @@
 use validator::Validate;
 
 use crate::models;
-#[cfg(any(feature = "client", feature = "server"))]
+#[cfg(any(feature = "server"))]
 use crate::header;
 {{! Don't "use" structs here - they can conflict with the names of models, and mean that the code won't compile }}
 {{#models}}
@@ -539,7 +539,7 @@ impl std::str::FromStr for {{{classname}}} {
 
 // Methods for converting between header::IntoHeaderValue<{{{classname}}}> and hyper::header::HeaderValue
 
-#[cfg(any(feature = "client", feature = "server"))]
+#[cfg(any(feature = "server"))]
 impl std::convert::TryFrom<header::IntoHeaderValue<{{{classname}}}>> for hyper::header::HeaderValue {
     type Error = String;
 
@@ -554,7 +554,7 @@ impl std::convert::TryFrom<header::IntoHeaderValue<{{{classname}}}>> for hyper::
     }
 }
 
-#[cfg(any(feature = "client", feature = "server"))]
+#[cfg(any(feature = "server"))]
 impl std::convert::TryFrom<hyper::header::HeaderValue> for header::IntoHeaderValue<{{{classname}}}> {
     type Error = String;
 
