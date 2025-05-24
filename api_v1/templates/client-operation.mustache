@@ -81,7 +81,7 @@
         let mut request = match Request::builder()
             .method("{{{vendorExtensions.x-http-method}}}")
             .uri(uri)
-            .body(Body::empty()) {
+            .body(Full::new(Bytes::new())) {
                 Ok(req) => req,
                 Err(e) => return Err(ApiError(format!("Unable to create request: {}", e)))
         };

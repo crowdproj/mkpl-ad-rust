@@ -1,5 +1,5 @@
                 _ => Ok(Response::builder().status(StatusCode::NOT_FOUND)
-                        .body(Body::empty())
+                        .body(Full::new(Bytes::new()))
                         .expect("Unable to create Not Found response"))
             }
         }

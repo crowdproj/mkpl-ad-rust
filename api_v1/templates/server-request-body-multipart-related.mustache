@@ -1,15 +1,17 @@
                                 // Get multipart chunks.
 
                                 // Create headers from top-level content type header.
+                                /*
                                 let multipart_headers = match swagger::multipart::related::create_multipart_headers(headers.get(CONTENT_TYPE)) {
                                     Ok(headers) => headers,
                                     Err(e) => {
                                         return Ok(Response::builder()
                                                 .status(StatusCode::BAD_REQUEST)
-                                                .body(Body::from(e))
+                                                .body(Full::new(Bytes::from(e)))
                                                 .expect("Unable to create Bad Request response due to unable to read content-type header for {{operationId}}"));
                                     }
                                 };
+                                */
 
                                 // &*body expresses the body as a byteslice, &mut provides a
                                 // mutable reference to that byteslice.
@@ -18,13 +20,13 @@
                                     Err(e) => {
                                         return Ok(Response::builder()
                                                 .status(StatusCode::BAD_REQUEST)
-                                                .body(Body::from(format!("Could not read multipart body for {{operationId}}: {}", e)))
+                                                .body(Full::new(Bytes::from(format!("Could not read multipart body for {{operationId}}: {}", e))))
                                                 .expect("Unable to create Bad Request response due to unable to read multipart body for {{operationId}}"));
                                     }
                                 };
 
 {{#formParams}}
-                                let mut param_{{{paramName}}} = None;
+let mut param_{{{paramName}}} = None;
 {{/formParams}}
 
                                 for node in nodes {
@@ -43,7 +45,7 @@
                                                     Ok(json_data) => json_data,
                                                     Err(e) => return Ok(Response::builder()
                                                         .status(StatusCode::BAD_REQUEST)
-                                                        .body(Body::from(format!("Couldn't parse body parameter {{dataType}} - doesn't match schema: {}", e)))
+                                                        .body(Full::new(Bytes::from(format!("Couldn't parse body parameter {{dataType}} - doesn't match schema: {}", e))))
                                                         .expect("Unable to create Bad Request response for invalid body parameter {{dataType}} due to schema"))
                                                 };
                                                 // Push JSON part to return object.
@@ -79,7 +81,7 @@
                                     Some(x) => x,
                                     None =>  return Ok(Response::builder()
                                         .status(StatusCode::BAD_REQUEST)
-                                        .body(Body::from("Missing required multipart/related parameter {{{paramName}}}".to_string()))
+                                        .body(Full::new(Bytes::from("Missing required multipart/related parameter {{{paramName}}}".to_string())))
                                         .expect("Unable to create Bad Request response for missing multipart/related parameter {{{paramName}}} due to schema"))
                                 };
   {{/required}}

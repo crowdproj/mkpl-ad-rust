@@ -21,7 +21,7 @@
         });
 
         // Add the message body to the request object.
-        *request.body_mut() = Body::from(body);
+        *request.body_mut() = Full::new(Bytes::from(body));
   {{/x-consumes-multipart-related}}
   {{#x-consumes-form}}
 
@@ -60,7 +60,7 @@
 
         let body = serde_urlencoded::to_string(params).expect("impossible to fail to serialize");
 
-        *request.body_mut() = Body::from(body.into_bytes());
+        *request.body_mut() = Full::new(Bytes::from(body.into_bytes()));
 
         let header = "{{#consumes}}{{#-first}}{{{mediaType}}}{{/-first}}{{/consumes}}{{^consumes}}application/json{{/consumes}}";
         request.headers_mut().insert(CONTENT_TYPE, match HeaderValue::from_str(header) {
@@ -94,7 +94,7 @@
         let body = serde_json::to_string(&param_{{{paramName}}}).expect("impossible to fail to serialize");
         {{/x-consumes-json}}
       {{/vendorExtensions}}
-        *request.body_mut() = Body::from(body);
+        *request.body_mut() = Full::new(Bytes::from(body));
       {{^required}}
         }
       {{/required}}
