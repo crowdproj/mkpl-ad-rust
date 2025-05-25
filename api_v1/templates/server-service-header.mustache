@@ -61,7 +61,7 @@ impl<T, C> Clone for Service<T, C> where
 
 impl<T, C> hyper::service::Service<(Request<Incoming>, C)> for Service<T, C> where
     T: Api<C> + Clone + Send + Sync + 'static,
-    C: Send + Sync + 'static
+    C: Send + Sync + 'static + api_common::Has<api_common::XSpanIdString>
 {
     type Response = Response<Full<Bytes>>;
     type Error = crate::ServiceError;
@@ -76,7 +76,7 @@ impl<T, C> hyper::service::Service<(Request<Incoming>, C)> for Service<T, C> whe
 {{/apiUsesMultipartFormData}}
         ) -> Result<Response<Full<Bytes>>, crate::ServiceError> where
             T: Api<C> + Clone + Send + 'static,
-            C: Send + Sync + 'static
+            C: Send + Sync + 'static + api_common::Has<api_common::XSpanIdString>
         {
             let (request, context) = req;
             let (parts, body) = request.into_parts();

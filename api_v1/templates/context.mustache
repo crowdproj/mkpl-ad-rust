@@ -17,6 +17,7 @@ impl<T, Target> Service<Target> for MakeAddContext<T>
 where
     T: Service<Target> + Clone + Send + 'static,
     T::Future: Send + 'static,
+    Target: std::marker::Send + 'static,
 {
     type Response = AddContext<T::Response>;
     type Error = T::Error;

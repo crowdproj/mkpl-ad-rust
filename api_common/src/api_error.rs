@@ -1,11 +1,14 @@
-// api_error.rs
+use http_body_util::Full;
 use hyper::{body::Bytes, Response, StatusCode};
 use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum ApiError {
-    #[error("HTTP processing error: {0}")]
+    #[error("Hyper processing error: {0}")]
     Hyper(#[from] hyper::Error),
+
+    #[error("HTTP processing error: {0}")]
+    HyperHttp(#[from] hyper::http::Error),
 
     #[error("Serialization error: {0}")]
     Serde(#[from] serde_json::Error),
@@ -28,17 +31,18 @@ impl ApiError {
         }
     }
 
-    pub fn into_response(&self) -> Response<Bytes> {
+    pub fn into_response(&self) -> Response<Full<Bytes>> {
         let body = self.to_string();
         Response::builder()
             .status(self.status_code())
-            .body(Bytes::from(body))
+            .body(Full::new(Bytes::from(body)))
             .unwrap()
     }
 
     pub fn status_code(&self) -> StatusCode {
         match self {
             ApiError::Hyper(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            ApiError::HyperHttp(_) => StatusCode::BAD_REQUEST,
             ApiError::Serde(_) => StatusCode::BAD_REQUEST,
             ApiError::InvalidHeader(_) => StatusCode::BAD_REQUEST,
             ApiError::Custom { code, .. } => *code,

@@ -1,6 +1,4 @@
-mod api;
-// mod auth;
-mod router;
+mod routes;
 mod server;
 
 use server::run_server;

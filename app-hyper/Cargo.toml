@@ -6,6 +6,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+api_common = { path = "../api_common" }
 api_v1 = { path = "../api_v1" }
 api_v1_map = { path = "../api_v1_map" }
 biz_common = { path = "../biz-common" }
@@ -17,4 +18,5 @@ http-body-util.workspace = true
 hyper-util.workspace = true
 bytes.workspace = true
 log.workspace = true
+serde_json.workspace = true
 env_logger = "0.11"
