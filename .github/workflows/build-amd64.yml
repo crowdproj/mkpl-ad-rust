@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: 'CI-publish'
+name: 'CI-publish-AMD'
 
 # Controls when the workflow will run
 on:
@@ -18,11 +18,12 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  publish:
+  publish-amd64:
     runs-on: ubuntu-24.04
     # runs-on: ubuntu-24.04-arm
     steps:
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: davidB/rust-cargo-make@v1
       - uses: actions/checkout@v4
 
       - name: Login to Docker Hub
@@ -32,24 +33,14 @@ jobs:
           username: ${{ secrets.CONTAINER_REGISTRY_USER }}
           password: ${{ secrets.CONTAINER_REGISTRY_PASS }}
   
-      - name: Set up Docker Buildx
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Publish plugin
-        run: docker buildx build --platform linux/arm64 -t "$CONTAINER_REGISTRY_PREF/cwp-ad:latest" --file ./build-app/Dockerfile --push .
+      - name: Run tests
+        run: cargo make push_all_amd64
         env:
-          # CONTAINER_REGISTRY_PASS: ${{ secrets.CONTAINER_REGISTRY_PASS }}
-          # CONTAINER_REGISTRY_USER: ${{ secrets.CONTAINER_REGISTRY_USER }}
-          # CONTAINER_REGISTRY_HOST: ${{ vars.CONTAINER_REGISTRY_HOST }}
           CONTAINER_REGISTRY_PREF: ${{ vars.CONTAINER_REGISTRY_PREF }}
           PROJECT_VERSION: ${{ github.event.release.tag_name }}
-
-      - name: Publish Swagger
-        run: docker buildx build --platform linux/amd64 -t "$CONTAINER_REGISTRY_PREF/cwp-ad-swagger:latest" --file ./build-swagger/Dockerfile --push .
-        env:
-          # CONTAINER_REGISTRY_PASS: ${{ secrets.CONTAINER_REGISTRY_PASS }}
-          # CONTAINER_REGISTRY_USER: ${{ secrets.CONTAINER_REGISTRY_USER }}
-          # CONTAINER_REGISTRY_HOST: ${{ vars.CONTAINER_REGISTRY_HOST }}
-          CONTAINER_REGISTRY_PREF: ${{ vars.CONTAINER_REGISTRY_PREF }}
-          PROJECT_VERSION: ${{ github.event.release.tag_name }}
-  
