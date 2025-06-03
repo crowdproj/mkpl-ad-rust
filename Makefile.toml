@@ -1,0 +1,152 @@
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+
+[tasks.env]
+env = { PVERSION = { script = [
+    "cargo pkgid app-hyper | cut -d# -f2 | cut -d: -f2",
+] } }
+workspace = false
+
+[tasks.build_swag_arm64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/arm64",
+    "-t",
+    "cwp-ad-swagger:${PVERSION}-arm",
+    "--file",
+    "./build-swagger/Dockerfile",
+    "--load",
+    ".",
+]
+workspace = false
+
+[tasks.push_swag_arm64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/arm64",
+    "-t",
+    "$CONTAINER_REGISTRY_PREF/cwp-ad-swagger:${PVERSION}",
+    "--file",
+    "./build-swagger/Dockerfile",
+    "--push",
+    ".",
+]
+workspace = false
+
+[tasks.build_app_arm64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/arm64",
+    "-t",
+    "cwp-ad-app:${PVERSION}-arm",
+    "--file",
+    "./build-app/Dockerfile",
+    "--load",
+    ".",
+]
+workspace = false
+
+[tasks.push_app_arm64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/arm64",
+    "-t",
+    "$CONTAINER_REGISTRY_PREF/cwp-ad-app:${PVERSION}",
+    "--file",
+    "./build-app/Dockerfile",
+    "--push",
+    ".",
+]
+workspace = false
+
+[tasks.push_all_arm64]
+dependencies = ["push_app_arm64", "push_swag_arm64"]
+workspace = false
+
+[tasks.build_swag_amd64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/amd64",
+    "-t",
+    "cwp-ad-swagger:${PVERSION}-amd",
+    "--file",
+    "./build-swagger/Dockerfile",
+    "--load",
+    ".",
+]
+workspace = false
+
+[tasks.push_swag_amd64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/amd64",
+    "-t",
+    "$CONTAINER_REGISTRY_PREF/cwp-ad-swagger:${PVERSION}",
+    "--file",
+    "./build-swagger/Dockerfile",
+    "--push",
+    ".",
+]
+workspace = false
+
+[tasks.build_app_amd64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/amd64",
+    "-t",
+    "cwp-ad-app:${PVERSION}-amd",
+    "--file",
+    "./build-app/Dockerfile",
+    "--load",
+    ".",
+]
+workspace = false
+
+[tasks.push_app_amd64]
+dependencies = ["env"]
+command = "docker"
+args = [
+    "buildx",
+    "build",
+    "--platform",
+    "linux/amd64",
+    "-t",
+    "$CONTAINER_REGISTRY_PREF/cwp-ad-app:${PVERSION}",
+    "--file",
+    "./build-app/Dockerfile",
+    "--push",
+    ".",
+]
+workspace = false
+
+[tasks.push_all_amd64]
+dependencies = ["push_app_amd64", "push_swag_amd64"]
+workspace = false

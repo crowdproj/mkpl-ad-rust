@@ -11,25 +11,9 @@ info:
 servers:
   - url: http://localhost:8080/
 tags:
-  - name: swagger
-    description: Свагер
-  - name: ad
-    description: Объявление (о покупке или продаже)
+  - name: v1
+    description: Версия API 1
 paths:
-  /:
-    get:
-      tags:
-        - swagger
-      summary: Swagger
-      operationId: swagger
-      responses:
-        200:
-          description: Success
-          content:
-            text/html:
-              schema:
-                type: string
-              example: 'whoa!'
   /v1/create:
     post:
       tags:
