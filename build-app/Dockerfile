@@ -17,8 +17,7 @@ FROM debian:trixie-slim
 WORKDIR /app
 RUN apt-get update && \
     apt-get install -y \
-    libssl-dev openssl \
-    pkg-config \
+    openssl \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
