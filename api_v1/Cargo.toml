@@ -32,16 +32,8 @@ api_common = { path = "../api_common" }
 async-trait.workspace = true
 chrono = { version = "0.4", features = ["serde"] }
 futures = "0.3"
-# swagger = { version = "6.5", features = [
-#    "serdejson",
-#    "server",
-#    "client",
-#    "tls",
-#    "tcp",
-# ] }
 log.workspace = true
 mime.workspace = true
-multipart.workspace = true
 tokio.workspace = true
 bytes.workspace = true
 serde.workspace = true
@@ -76,8 +68,6 @@ frunk-enum-derive = { version = "0.3", optional = true }
 frunk-enum-core = { version = "0.3", optional = true }
 
 # Bearer authentication
-jsonwebtoken = { version = "9.3", optional = false }
-
 [dev-dependencies]
 clap = "4.5"
 env_logger = "0.11"

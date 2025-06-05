@@ -104,7 +104,8 @@ impl<T: Api<C> + Send + Sync, C: Clone + Send + Sync> ApiNoContext<C> for Contex
     }
 
     fn context(&self) -> &C {
-        ContextWrapper::context(self)
+        //ContextWrapper::context(self)
+        &self.context
     }
 
 {{#apiInfo}}
@@ -244,7 +245,8 @@ impl<T: CallbackApi<C> + Send + Sync, C: Clone + Send + Sync> CallbackApiNoConte
     }
 
     fn context(&self) -> &C {
-        ContextWrapper::context(self)
+        // ContextWrapper::context(self)
+        &self.context
     }
 
 {{#apiInfo}}

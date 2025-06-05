@@ -20,7 +20,6 @@ tokio = { version = "1.45", features = ["full"] }
 log = "0.4"
 futures = "0.3"
 mime = "0.3.17"
-multipart = "0.18"
 bytes = "1.10"
 http-body-util = "0.1"
 hyper-util = { version = "0.1", features = ["full"] }

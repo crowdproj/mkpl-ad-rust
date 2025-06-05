@@ -1,24 +1,24 @@
-use api_v1::models::AdCreateRequest;
+use api_v1::models::AdUpdateRequest;
 
+use super::object_mapper::AdUpdateObjectMapper;
 use crate::mappers::base::{RequestIdConverter, DISCRIMINATOR_CREATE};
-use crate::mappers::create::object_mapper::AdCreateObjectMapper;
 use biz_common::{models::MkplAdCommand, MkplAdCtx};
 
 #[derive(Debug)]
-pub struct AdCreateRequestMapper;
+pub struct AdUpdateRequestMapper;
 
-impl AdCreateRequestMapper {
-    pub fn from_api(ctx: &mut MkplAdCtx, api_obj: &AdCreateRequest) {
+impl AdUpdateRequestMapper {
+    pub fn from_api(ctx: &mut MkplAdCtx, api_obj: &AdUpdateRequest) {
         ctx.request_id = RequestIdConverter::from_api(&api_obj.request_id);
-        ctx.ad_request = AdCreateObjectMapper::from_api(&api_obj.ad);
-        ctx.command = MkplAdCommand::Create;
+        ctx.ad_request = AdUpdateObjectMapper::from_api(&api_obj.ad);
+        ctx.command = MkplAdCommand::Update;
     }
 
-    pub fn to_api(ctx: &MkplAdCtx) -> AdCreateRequest {
-        AdCreateRequest {
+    pub fn to_api(ctx: &MkplAdCtx) -> AdUpdateRequest {
+        AdUpdateRequest {
             request_id: RequestIdConverter::to_api(&ctx.request_id),
             request_type: Some(DISCRIMINATOR_CREATE.to_string()),
-            ad: AdCreateObjectMapper::to_api(&ctx.ad_request),
+            ad: AdUpdateObjectMapper::to_api(&ctx.ad_request),
             debug: None,
         }
     }
@@ -38,7 +38,7 @@ mod tests {
         };
 
         // to_api
-        let res = AdCreateRequestMapper::to_api(&mut ctx);
+        let res = AdUpdateRequestMapper::to_api(&mut ctx);
 
         assert_eq!(
             test_obj.title,
@@ -47,7 +47,7 @@ mod tests {
 
         // from_api
         let mut new_ctx = MkplAdCtx::new();
-        AdCreateRequestMapper::from_api(&mut new_ctx, &res);
+        AdUpdateRequestMapper::from_api(&mut new_ctx, &res);
 
         assert_eq!(test_obj.title, new_ctx.ad_request.title);
     }

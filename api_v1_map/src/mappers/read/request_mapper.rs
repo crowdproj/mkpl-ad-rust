@@ -5,24 +5,20 @@ use crate::mappers::read::object_mapper::AdReadObjectMapper;
 use biz_common::{models::MkplAdCommand, MkplAdCtx};
 
 #[derive(Debug)]
-pub struct AdReadRequestMapper<'a>(&'a mut MkplAdCtx);
+pub struct AdReadRequestMapper;
 
-impl<'a> AdReadRequestMapper<'a> {
-    pub fn new(ctx: &'a mut MkplAdCtx) -> Self {
-        AdReadRequestMapper(ctx)
+impl AdReadRequestMapper {
+    pub fn from_api(ctx: &mut MkplAdCtx, api_obj: &AdReadRequest) {
+        ctx.request_id = RequestIdConverter::from_api(&api_obj.request_id);
+        ctx.ad_request = AdReadObjectMapper::from_api(&api_obj.ad);
+        ctx.command = MkplAdCommand::Create;
     }
 
-    pub fn from_api(&mut self, api_obj: &AdReadRequest) {
-        self.0.request_id = RequestIdConverter::from_api(&api_obj.request_id);
-        self.0.ad_request = AdReadObjectMapper::from_api(&api_obj.ad);
-        self.0.command = MkplAdCommand::Create;
-    }
-
-    pub fn to_api(&self) -> AdReadRequest {
+    pub fn to_api(ctx: &MkplAdCtx) -> AdReadRequest {
         AdReadRequest {
-            request_id: RequestIdConverter::to_api(&self.0.request_id),
+            request_id: RequestIdConverter::to_api(&ctx.request_id),
             request_type: Some(DISCRIMINATOR_READ.to_string()),
-            ad: AdReadObjectMapper::to_api(&self.0.ad_request),
+            ad: AdReadObjectMapper::to_api(&ctx.ad_request),
             debug: None,
         }
     }
@@ -36,14 +32,13 @@ mod tests {
     #[test]
     fn test_full_conversion_cycle() {
         let test_obj = StubsMkplAd::case1();
-        let mut ctx = MkplAdCtx {
+        let ctx = MkplAdCtx {
             ad_request: test_obj.clone(),
             ..MkplAdCtx::new()
         };
 
         // to_api
-        let mapper_out = AdReadRequestMapper(&mut ctx);
-        let res = mapper_out.to_api();
+        let res = AdReadRequestMapper::to_api(&ctx);
 
         assert_eq!(
             test_obj.id.get(),
@@ -52,8 +47,7 @@ mod tests {
 
         // from_api
         let mut new_ctx = MkplAdCtx::new();
-        let mut mapper_in = AdReadRequestMapper(&mut new_ctx);
-        mapper_in.from_api(&res);
+        AdReadRequestMapper::from_api(&mut new_ctx, &res);
 
         assert_eq!(test_obj.id, new_ctx.ad_request.id);
     }
