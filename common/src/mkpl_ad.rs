@@ -3,7 +3,7 @@ use crate::mkpl_ad_lock::MkplAdLock;
 use crate::mkpl_ad_product_id::MkplAdProductId;
 use lazy_static::lazy_static;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct MkplAd {
     /// Идентификатор объявления
     pub id: MkplAdId,
@@ -30,7 +30,7 @@ impl MkplAd {
 }
 
 #[allow(dead_code)]
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum MkplAdType {
     None,
     Supply,
@@ -38,7 +38,7 @@ pub enum MkplAdType {
 }
 
 #[allow(dead_code)]
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum MkplAdVisibility {
     None,
     Owner,
