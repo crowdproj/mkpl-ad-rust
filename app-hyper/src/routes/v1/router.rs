@@ -16,6 +16,12 @@ pub async fn route(req: Request<hyper::body::Incoming>) -> Response<Full<Bytes>>
         "/v1/update" => handle_update(req)
             .await
             .unwrap_or_else(|error: ApiError| handle_error(error)),
+        "/v1/search" => handle_search(req)
+            .await
+            .unwrap_or_else(|error: ApiError| handle_error(error)),
+        "/v1/offers" => handle_offers(req)
+            .await
+            .unwrap_or_else(|error: ApiError| handle_error(error)),
         _ => Response::builder()
             .status(404)
             .body(Full::new(Bytes::new()))

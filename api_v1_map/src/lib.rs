@@ -7,6 +7,8 @@ pub use crate::mappers::create::request_mapper::AdCreateRequestMapper as AdCreat
 pub use crate::mappers::create::response_mapper::AdCreateResponseMapper as AdCreateResponseMapperV1;
 pub use crate::mappers::delete::request_mapper::AdDeleteRequestMapper as AdDeleteRequestMapperV1;
 pub use crate::mappers::delete::response_mapper::AdDeleteResponseMapper as AdDeleteResponseMapperV1;
+pub use crate::mappers::offers::request_mapper::AdOffersRequestMapper as AdOffersRequestMapperV1;
+pub use crate::mappers::offers::response_mapper::AdOffersResponseMapper as AdOffersResponseMapperV1;
 pub use crate::mappers::read::request_mapper::AdReadRequestMapper as AdReadRequestMapperV1;
 pub use crate::mappers::read::response_mapper::AdReadResponseMapper as AdReadResponseMapperV1;
 pub use crate::mappers::search::request_mapper::AdSearchRequestMapper as AdSearchRequestMapperV1;

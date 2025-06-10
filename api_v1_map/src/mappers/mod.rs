@@ -1,6 +1,7 @@
 mod base;
 pub(crate) mod create;
 pub(crate) mod delete;
+pub(crate) mod offers;
 pub(crate) mod read;
 pub(crate) mod search;
 pub(crate) mod update;
