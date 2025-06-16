@@ -1,0 +1,50 @@
+use std::fmt::Debug;
+
+// Определяем тип ошибки
+#[derive(Debug)]
+pub struct CorError(pub String);
+
+// Новый тип обработчика, принимающего контекст и возвращающий Unit
+type StepFn<C> = dyn FnMut(&mut C);
+
+// Внутренняя структура, содержащая шаги обработки
+struct CorInternal<C> {
+    steps: Vec<Box<StepFn<C>>>,
+}
+
+// Внешний публичный тип кор
+pub struct Cor<C>(CorInternal<C>);
+
+impl<C> Cor<C> {
+    pub fn process(&self, ctx: &mut C) {
+        for step in &self.0.steps {
+            (*step)(ctx);
+        }
+    }
+}
+
+// Удобные макросы для декларации обработчиков и цепочек
+macro_rules! cor_create {
+    ($name:expr, {$($h:expr),*}) => {{
+        let internal = CorInternal {
+            steps: vec![
+                $(Box::new($h)),*
+            ]
+        };
+        Cor(internal)
+    }}
+}
+
+macro_rules! cor_handler {
+    ($desc:expr, $f:expr) => {{
+        move |ctx: &mut C| {
+            eprintln!("{}: {:?}", $desc, ctx);
+            $f(ctx)
+        }
+    }};
+}
+
+// Объявляем минимальный контракт контекста
+pub trait CorContext {
+    fn push_error(&mut self, err: CorError);
+}

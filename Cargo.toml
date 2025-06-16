@@ -7,7 +7,9 @@ members = [
     "stubs",
     "api_v1",
     "api_v1_map",
+    "biz-logic",
     "app-hyper",
+    "lib-cor",
 ]
 
 [workspace.dependencies]
@@ -24,3 +26,4 @@ bytes = "1.10"
 http-body-util = "0.1"
 hyper-util = { version = "0.1", features = ["full"] }
 url = { version = "2.5" }
+thiserror = "2"

@@ -1,5 +1,5 @@
 [package]
-name = "api_v1_map"
+name = "biz_logic"
 version = "0.1.0"
 edition = "2018"
 
@@ -9,9 +9,5 @@ crate-type = ["rlib"]
 [dependencies]
 common = { path = "../common" }
 biz_common = { path = "../biz-common" }
-api_v1 = { path = "../api_v1" }
 async-trait.workspace = true
-once_cell = "1"
-
-[dev-dependencies]
-stubs = { path = "../stubs" }
+tokio.workspace = true

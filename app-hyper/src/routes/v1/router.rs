@@ -16,6 +16,9 @@ pub async fn route(req: Request<hyper::body::Incoming>) -> Response<Full<Bytes>>
         "/v1/update" => handle_update(req)
             .await
             .unwrap_or_else(|error: ApiError| handle_error(error)),
+        "/v1/delete" => handle_delete(req)
+            .await
+            .unwrap_or_else(|error: ApiError| handle_error(error)),
         "/v1/search" => handle_search(req)
             .await
             .unwrap_or_else(|error: ApiError| handle_error(error)),

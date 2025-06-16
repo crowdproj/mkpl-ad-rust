@@ -26,7 +26,7 @@ impl AdOffersObjectMapper {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use stubs::StubsMkplAdFilter;
+    use stubs::StubsMkplAd;
 
     #[test]
     fn test_full_conversion_cycle() {
