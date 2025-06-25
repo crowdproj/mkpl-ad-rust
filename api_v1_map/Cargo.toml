@@ -10,6 +10,7 @@ crate-type = ["rlib"]
 common = { path = "../common" }
 biz_common = { path = "../biz-common" }
 api_v1 = { path = "../api_v1" }
+cor = { path = "../lib-cor" }
 async-trait.workspace = true
 once_cell = "1"
 

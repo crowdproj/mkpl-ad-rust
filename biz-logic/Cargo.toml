@@ -9,5 +9,6 @@ crate-type = ["rlib"]
 [dependencies]
 common = { path = "../common" }
 biz_common = { path = "../biz-common" }
+cor = { path = "../lib-cor" }
 async-trait.workspace = true
 tokio.workspace = true

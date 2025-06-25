@@ -27,15 +27,15 @@ impl AdReadRequestMapper {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use cor::CorContext;
     use stubs::StubsMkplAd;
 
     #[test]
     fn test_full_conversion_cycle() {
         let test_obj = StubsMkplAd::case1();
-        let ctx = MkplAdCtx {
-            ad_request: test_obj.clone(),
-            ..MkplAdCtx::new()
-        };
+        let ctx = MkplAdCtx::new().apply(|c| {
+            c.ad_request = test_obj.clone();
+        });
 
         // to_api
         let res = AdReadRequestMapper::to_api(&ctx);

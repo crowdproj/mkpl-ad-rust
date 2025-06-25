@@ -10,6 +10,7 @@ macro_rules! api_handler {
             use hyper::header::CONTENT_TYPE;
             use hyper::{Response, StatusCode};
             use serde_json;
+            use cor::CorContext;
 
             // Чтение тела
             let body_bytes = {
@@ -26,10 +27,7 @@ macro_rules! api_handler {
                 serde_json::from_slice(&body_bytes).map_err(|e| ApiError::Serde(e.into()))?;
 
             // Инициализация контекста
-            let mut ctx = MkplAdCtx {
-                state: BizStatus::Running,
-                ..MkplAdCtx::new()
-            };
+            let mut ctx = MkplAdCtx::new().apply(|c| c.set_status(BizStatus::Running));
 
             // Маппинг запроса
             $mapper(&mut ctx, &request);

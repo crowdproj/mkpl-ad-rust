@@ -73,16 +73,16 @@ macro_rules! gen_response_mapper {
         mod tests {
             use super::*;
             use stubs::StubsMkplAd;
+            use cor::CorContext;
 
             #[test]
             fn test_full_conversion_cycle() {
                 let test_obj = StubsMkplAd::case1();
                 let test_objs = vec![StubsMkplAd::case1()];
-                let mut source_ctx = MkplAdCtx{
-                    ad_response: test_obj.clone(),
-                    ads_response: test_objs.clone(),
-                    ..MkplAdCtx::new()
-                };
+                let mut source_ctx = MkplAdCtx::new().apply(|c| {
+                    c.ad_response = test_obj.clone();
+                    c.ads_response = test_objs.clone();
+                });
 
                 // // Подготовка исходного контекста
                 // $(

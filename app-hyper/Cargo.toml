@@ -10,6 +10,7 @@ api_common = { path = "../api_common" }
 api_v1 = { path = "../api_v1" }
 api_v1_map = { path = "../api_v1_map" }
 biz_common = { path = "../biz-common" }
+cor = { path = "../lib-cor" }
 stubs = { path = "../stubs" }
 
 hyper.workspace = true

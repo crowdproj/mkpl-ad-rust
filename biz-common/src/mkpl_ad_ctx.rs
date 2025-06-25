@@ -1,31 +1,18 @@
-use crate::models::biz_status::BizStatus;
-use crate::models::mkpl_ad_command::MkplAdCommand;
+use crate::models::*;
 use common::*;
+use cor::{cor_context, CorContext};
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct MkplAdCtx {
-    pub command: MkplAdCommand,
-    pub state: BizStatus,
-    pub request_id: MkplAdRequestId,
-    pub ad_request: MkplAd,
-    pub ad_filter_request: MkplAdFilter,
+cor_context!(
+    MkplAdCtx,
+    MkplErrorCode,
+    MkplFieldName,
 
-    pub ad_response: MkplAd,
-    pub ads_response: Vec<MkplAd>,
-}
+    command: MkplAdCommand = MkplAdCommand::None,
+    request_id: MkplAdRequestId = MkplAdRequestId::none(),
 
-impl MkplAdCtx {
-    pub fn new() -> MkplAdCtx {
-        MkplAdCtx {
-            command: MkplAdCommand::None,
-            state: BizStatus::None,
-            request_id: MkplAdRequestId::none(),
+    ad_request: MkplAd = MkplAd::new(),
+    ad_filter_request: MkplAdFilter = MkplAdFilter::new(),
 
-            ad_request: MkplAd::new(),
-            ad_filter_request: MkplAdFilter::new(),
-
-            ad_response: MkplAd::new(),
-            ads_response: Vec::<MkplAd>::new(),
-        }
-    }
-}
+    ad_response: MkplAd = MkplAd::new(),
+    ads_response: Vec::<MkplAd> = Vec::<MkplAd>::new(),
+);

@@ -60,9 +60,9 @@ async fn test_chain_external() {
         }
     );
 
-    let mut ctx = TestContext::new();
-    ctx.id =42;
-    let wctx = ctx.shared();
+    let wctx = TestContext::new()
+        .apply(|ctx| ctx.id = 42)
+        .shared();
 
     chain.process(wctx.clone()).await;
 

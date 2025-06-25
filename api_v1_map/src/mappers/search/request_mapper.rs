@@ -27,15 +27,15 @@ impl AdSearchRequestMapper {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use cor::CorContext;
     use stubs::StubsMkplAdFilter;
 
     #[test]
     fn test_full_conversion_cycle() {
         let test_obj = StubsMkplAdFilter::case1();
-        let mut ctx = MkplAdCtx {
-            ad_filter_request: test_obj.clone(),
-            ..MkplAdCtx::new()
-        };
+        let mut ctx = MkplAdCtx::new().apply(|c| {
+            c.ad_filter_request = test_obj.clone();
+        });
 
         // to_api
         let res = AdSearchRequestMapper::to_api(&mut ctx);

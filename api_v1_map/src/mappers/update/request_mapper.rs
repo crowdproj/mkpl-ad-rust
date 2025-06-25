@@ -27,15 +27,15 @@ impl AdUpdateRequestMapper {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use cor::CorContext;
     use stubs::StubsMkplAd;
 
     #[test]
     fn test_full_conversion_cycle() {
         let test_obj = StubsMkplAd::case1();
-        let mut ctx = MkplAdCtx {
-            ad_request: test_obj.clone(),
-            ..MkplAdCtx::new()
-        };
+        let mut ctx = MkplAdCtx::new().apply(|c| {
+            c.ad_request = test_obj.clone();
+        });
 
         // to_api
         let res = AdUpdateRequestMapper::to_api(&mut ctx);

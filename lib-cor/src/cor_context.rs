@@ -8,6 +8,12 @@ pub trait CorContext: ContextTypes + Sized + Send + Sync + 'static {
     fn errors(&self) -> &Vec<CorError<Self::ErrorCode, Self::FieldName>>;
     fn status(&self) -> CorStatus;
 
+    fn apply(self, f: impl FnOnce(&mut Self)) -> Self {
+        let mut value = self;
+        f(&mut value);
+        value
+    }
+
     fn fail(&mut self, err: CorError<Self::ErrorCode, Self::FieldName>) {
         self.push_error(err);
         self.set_status(CorStatus::Failing);

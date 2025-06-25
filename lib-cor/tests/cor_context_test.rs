@@ -53,3 +53,9 @@ fn test_cor_context_macro_and_trait() {
         assert_eq!(inner.name, "Test");
     });
 }
+
+#[test]
+fn test_context_apply() {
+    let ctx = TestContext::new().apply(|ctx| ctx.id = 15);
+    assert_eq!(15, ctx.id);
+}

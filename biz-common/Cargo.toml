@@ -8,4 +8,5 @@ crate-type = ["rlib"]
 
 [dependencies]
 common = { path = "../common" }
+cor = { path = "../lib-cor" }
 async-trait = "0.1.24"
