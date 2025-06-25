@@ -1,4 +1,4 @@
-use cor::{cor_context, CorError, CorStatus};
+use cor::{cor_context, CorContext, CorError, CorStatus};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ErrorCode {
@@ -15,16 +15,20 @@ pub enum FieldName {
 }
 
 // Используем правильный синтаксис без фигурных скобок
-cor_context!(TestContext,
+cor_context!(
+    TestContext,
+    ErrorCode,
+    FieldName,
     id: u32 = 1,
     name: String = "Test".to_string()
 );
 
 #[test]
 fn test_cor_context_macro_and_trait() {
-    let ctx = TestContext::shared();
+    let ctx = TestContext::new();
+    let wctx = ctx.shared();
 
-    TestContext::with(ctx.clone(), |inner| {
+    TestContext::with(wctx.clone(), |inner| {
         let err = CorError {
             msg: "Invalid ID".to_string(),
             code: ErrorCode::ValidationFailed,
@@ -35,7 +39,7 @@ fn test_cor_context_macro_and_trait() {
         inner.set_status(CorStatus::Failing);
     });
 
-    TestContext::with(ctx, |inner| {
+    TestContext::with(wctx, |inner| {
         assert_eq!(inner.status, CorStatus::Failing);
         assert!(!inner.errors.is_empty());
 

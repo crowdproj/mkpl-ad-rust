@@ -1,83 +1,80 @@
 #[macro_export]
-// Создание цепочки обработчиков
-macro_rules! cor_create {
-    ($name:expr, $ctx_type:ty, {$($h:expr),*}) => {{
+macro_rules! cor_chain {
+    ($name:expr, $ctx_type:ty, {$($step:expr),*}) => {{
         let steps = vec![
-            $(Box::new($h) as Box<$crate::StepFn<$ctx_type>>),*
+            $(Box::new($step) as Box<dyn $crate::CorStep<$ctx_type>>),*
         ];
-        cor::Cor::new(steps)
-    }}
+        $crate::Cor::new($name, steps)
+    }};
 }
 
 #[macro_export]
 macro_rules! cor_handler {
-    ($desc:expr, $ctx_type:ty, $f:expr) => {{
-        move |wrapped_ctx: cor::CtxWrapper<$ctx_type>| -> std::pin::Pin<
-            Box<dyn std::future::Future<Output = ()> + Send + Sync + 'static>,
-        > { Box::pin($f(wrapped_ctx)) }
+    ($name:expr, $f:expr) => {{
+        $crate::CorClosureStep::new($name, $f)
     }};
 }
 
 #[macro_export]
 macro_rules! cor_context {
-    ($name:ident, $($field:ident: $ty:ty = $init:expr),* $(,)?) => {
+    ($name:ident, $ec:ty, $fld:ty, $($field:ident: $ty:ty = $init:expr),* $(,)?) => {
         use std::sync::{Arc, Mutex};
 
-        #[derive(std::fmt::Debug)]
+        #[derive(Debug)]
         pub struct $name {
-            errors: Vec<cor::CorError<ErrorCode, FieldName>>,
-            status: cor::CorStatus,
-            $($field: $ty,)*
+            errors: Vec<$crate::CorError<$ec, $fld>>,
+            status: $crate::CorStatus,
+            $(pub $field: $ty,)*
+        }
+
+        impl $crate::ContextTypes for $name {
+            type ErrorCode = $ec;
+            type FieldName = $fld;
         }
 
         impl $name {
             pub fn new() -> Self {
                 Self {
                     errors: Vec::new(),
-                    status: cor::CorStatus::None,
+                    status: $crate::CorStatus::None,
                     $($field: $init,)*
                 }
             }
 
-            pub fn push_error(&mut self, err: cor::CorError<ErrorCode, FieldName>) {
-                self.errors.push(err);
+            pub fn shared(self) -> Arc<Mutex<Self>> {
+                Arc::new(Mutex::new(self))
             }
 
-            pub fn set_status(&mut self, status: cor::CorStatus) {
-                self.status = status;
-            }
-
-            // Добавляем удобный метод для ошибок
-            pub fn fail(&mut self, err: cor::CorError<ErrorCode, FieldName>) {
-                self.push_error(err);
-                self.set_status(cor::CorStatus::Failing);
+            pub fn fail(&mut self, msg: &str, code: $ec, field: $fld) {
+                self.push_error($crate::CorError {
+                    msg: msg.to_string(),
+                    code,
+                    field,
+                    error: None,
+                });
+                self.set_status($crate::CorStatus::Failing);
             }
         }
 
-        impl cor::CorContext<ErrorCode, FieldName> for $name {
+        impl $crate::CorContext for $name {
             fn new() -> Self {
                 Self::new()
             }
-            fn push_error(&mut self, err: cor::CorError<ErrorCode, FieldName>) {
-                self.push_error(err);
+
+            fn push_error(&mut self, err: $crate::CorError<Self::ErrorCode, Self::FieldName>) {
+                self.errors.push(err);
             }
 
-            fn set_status(&mut self, status: cor::CorStatus) {
-                self.set_status(status);
-            }
-        }
-
-        impl $name {
-            pub fn shared() -> Arc<Mutex<Self>> {
-                Arc::new(Mutex::new(Self::new()))
+            fn set_status(&mut self, status: $crate::CorStatus) {
+                self.status = status;
             }
 
-            pub fn with<F, R>(ctx: Arc<Mutex<Self>>, f: F) -> R
-            where
-                F: FnOnce(&mut Self) -> R,
-            {
-                let mut guard = ctx.lock().unwrap();
-                f(&mut guard)
+            fn errors(&self) -> &Vec<$crate::CorError<Self::ErrorCode, Self::FieldName>> {
+                &self.errors
+            }
+
+            fn status(&self) -> $crate::CorStatus {
+                self.status
             }
         }
     };

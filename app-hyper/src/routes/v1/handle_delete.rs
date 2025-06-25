@@ -9,7 +9,7 @@ use hyper::body::Incoming;
 use hyper::{Request, Response};
 use serde_json;
 
-pub async fn handle_read(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, ApiError> {
+pub async fn handle_delete(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, ApiError> {
     let handler = api_handler!(
         AdDeleteRequest,  // Тип запроса
         AdDeleteResponse, // Тип ответа
