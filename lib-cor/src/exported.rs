@@ -4,7 +4,6 @@ use futures::future::join_all;
 use std::sync::{Arc, Mutex};
 
 pub type CtxWrapper<C> = Arc<Mutex<C>>;
-// pub type StepFn<C> = dyn Fn(CtxWrapper<C>) -> Pin<Box<dyn Future<Output = ()> + 'static>> + Send + Sync;
 pub type StepFn<C> = dyn Fn(CtxWrapper<C>) -> Pin<Box<dyn Future<Output = ()> + Send + Sync + 'static>> + Send + Sync + 'static;
 
 // Внутренняя структура для шагов обработки
